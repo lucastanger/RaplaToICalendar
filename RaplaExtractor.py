@@ -26,7 +26,7 @@ class RaplaExtractor:
         days = dr.getAllMondays()
 
         cal = icalendar.cal.Calendar()
-        cal.add('prodid', '-//My calendar product//mxm.dk//')
+        cal.add('prodid', self.url + 'key=' + self.key)
         cal.add('version', '2.0')
 
         for day in days:
@@ -37,7 +37,7 @@ class RaplaExtractor:
             except KeyError:
                 print(t_url + ' failed.')
 
-        f = open('example.ics', 'wb')
+        f = open('data/example.ics', 'wb')
         f.write(cal.to_ical())
         f.close()
 
@@ -69,16 +69,11 @@ class RaplaExtractor:
         :param t_url: str
         """
         result = requests.get(url=t_url)
-        f = open('rapla.html', 'wb')
+        f = open('data/rapla.html', 'wb')
         f.write(result.content)
         f.close()
         soup = BeautifulSoup(result.content, features='html.parser')
 
-        #result = open('rapla.html', 'r')
-        #if result.mode == 'r':
-        #    contents = result.read()
-
-        #soup = BeautifulSoup(contents, features='html.parser')
         samples = soup.find_all(attrs={'class': 'week_block'})
         date = soup.find_all(attrs={'class': 'week_header'})
         dates = {}
